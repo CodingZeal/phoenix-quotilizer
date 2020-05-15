@@ -8,7 +8,7 @@ defmodule Quotilizer.Application do
   def start(_type, _args) do
     children = [
       # Start the Ecto repository
-      # Quotilizer.Repo,
+      Quotilizer.Repo,
       # Start the Telemetry supervisor
       QuotilizerWeb.Telemetry,
       # Start the PubSub system
