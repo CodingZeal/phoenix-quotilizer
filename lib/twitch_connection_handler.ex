@@ -26,12 +26,6 @@ defmodule TwitchConnectionHandler do
     {:noreply, state}
   end
 
-  def handle_info({:disconnected, server, port}, state) do
-    debug "Disconnected to #{server}:#{port}"
-    debug state
-    {:noreply, state}
-  end
-
   def handle_info({:received, message, info, _channel}, state) do
     # debug "We got a chat message from #{state.user} : #{message}"
     broadcast({:ok, %{ text: message, user: info.user }})
