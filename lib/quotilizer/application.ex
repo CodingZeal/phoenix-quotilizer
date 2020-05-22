@@ -6,6 +6,10 @@ defmodule Quotilizer.Application do
   use Application
 
   def start(_type, _args) do
+    import Supervisor.Spec, warn: false
+
+    {:ok, client} = ExIRC.start_link!
+
     children = [
       # Start the Ecto repository
       Quotilizer.Repo,
@@ -14,9 +18,13 @@ defmodule Quotilizer.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Quotilizer.PubSub},
       # Start the Endpoint (http/https)
-      QuotilizerWeb.Endpoint
+      QuotilizerWeb.Endpoint,
       # Start a worker by calling: Quotilizer.Worker.start_link(arg)
       # {Quotilizer.Worker, arg}
+      # Define workers and child supervisors to be supervised
+      worker(TwitchConnectionHandler, [client]),
+      # here's where we specify the channels <t></t>o join:
+      worker(TwitchLoginHandler, [client, ["#a_seagull"]])
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
